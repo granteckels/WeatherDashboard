@@ -8,25 +8,29 @@ interface Coordinates {
 }
 // TODO: Define a class for the Weather object
 class Weather {
+  city?: string;
   date: string;
-  temp: number;
+  icon: string;
+  iconDescription: string;
+  tempF: number;
   humidity: number;
-  wind: number;
-  condition: string;
+  windSpeed: number;
 
   constructor(
     date: string,
-    temp: number,
+    icon: string,
+    iconDescription: string,
+    tempF: number,
     humidity: number,
-    wind: number,
-    condition: string
+    windSpeed: number,
   ) {
     const [year, month, day] = date.split('-');
     this.date = `${+month}/${+day}/${year}`;
-    this.temp = temp;
+    this.icon = icon;
+    this.iconDescription = iconDescription;
+    this.tempF = tempF;
     this.humidity = humidity;
-    this.wind = wind;
-    this.condition = condition;
+    this.windSpeed = windSpeed;
   }
 }
 
@@ -95,10 +99,11 @@ class WeatherService {
 
     return weatherData.map(day => ({
       date: day.dt_txt.slice(0,10),
-      temp: day.main.temp,
+      icon: day.weather[0].icon,
+      iconDescription: day.weather[0].main,
+      tempF: day.main.temp,
       humidity: day.main.humidity,
-      wind: day.wind.speed,
-      condition: day.weather[0].main
+      windSpeed: day.wind.speed,
     }))
   }
   // TODO: Complete buildForecastArray method
@@ -110,9 +115,10 @@ class WeatherService {
     const coordinates = await this.fetchAndDestructureLocationData();
     const parsedWeatherData = await this.fetchWeatherData(coordinates);
     const weatherData = parsedWeatherData.map(day => (new Weather(
-      day.date, day.temp, day.humidity, day.wind, day.condition
+      day.date, day.icon, day.iconDescription, day.tempF, day.humidity, day.windSpeed
     )))
-    console.log(weatherData);
+    weatherData[0].city = city;
+    return weatherData
   }
 }
 

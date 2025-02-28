@@ -5,10 +5,13 @@ const router = Router();
 import WeatherService from '../../service/weatherService.js';
 
 // TODO: POST Request with city name to retrieve weather data
-router.post('/', (req, _res) => {
+router.post('/', async (req, res) => {
   const cityName = req.body.cityName;
-  WeatherService.getWeatherForCity(cityName);
+  const weatherData = await WeatherService.getWeatherForCity(cityName);
   // TODO: save city to search history
+
+  console.log(weatherData);
+  res.json(weatherData);
 });
 
 // // TODO: GET search history
